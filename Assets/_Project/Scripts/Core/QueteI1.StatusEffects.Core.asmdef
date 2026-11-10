@@ -1,0 +1,14 @@
+{
+    "name": "QueteI1.StatusEffects.Core",
+    "rootNamespace": "QueteI1.StatusEffects",
+    "references": [],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

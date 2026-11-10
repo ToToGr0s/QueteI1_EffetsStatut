@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Anatomie du système d'effets de statut</title>
+<style>
+  @page { size: A4 landscape; margin: 0; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: #fff; }
+  body { width: 297mm; height: 210mm; padding: 7mm 9mm; font-family: "Segoe UI", Arial, sans-serif; color: #1d2330; font-size: 9.2pt; line-height: 1.32; overflow: hidden; }
+  header { display: flex; justify-content: space-between; align-items: baseline; border-bottom: 2px solid #1d2330; padding-bottom: 2mm; margin-bottom: 2.5mm; }
+  h1 { font-size: 15pt; margin: 0; }
+  header p { margin: 0; color: #5a6275; font-size: 8.5pt; }
+  svg { display: block; width: 100%; height: auto; }
+  svg text { font-family: "Segoe UI", Arial, sans-serif; }
+  .grid { display: grid; grid-template-columns: 1.05fr 1fr 1fr; gap: 4mm; margin-top: 2.5mm; }
+  .card { border: 1px solid #c9cfdb; border-radius: 2mm; padding: 2.2mm 3mm; }
+  .card h2 { font-size: 10pt; margin: 0 0 1.4mm; }
+  table { border-collapse: collapse; width: 100%; font-size: 8.4pt; }
+  th, td { text-align: left; padding: 0.8mm 1.2mm; border-bottom: 1px solid #e3e7ee; vertical-align: top; }
+  th { color: #5a6275; font-weight: 600; }
+  code { font-family: Consolas, monospace; font-size: 8.4pt; background: #f1f3f7; padding: 0 1mm; border-radius: 1mm; }
+  .formula { font-family: Consolas, monospace; font-size: 8.2pt; background: #eef4ff; border-left: 3px solid #3b7ddd; padding: 1.4mm 2mm; margin: 1mm 0 1.6mm; }
+  ul { margin: 0; padding-left: 4mm; }
+  li { margin-bottom: 0.6mm; }
+  .muted { color: #5a6275; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Quête I1 · Anatomie du système d'effets de statut</h1>
+  <p>Unity 6 · noms de classes = code réel</p>
+</header>
+
+<svg viewBox="0 0 1100 410" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#1d2330"/></marker>
+    <marker id="g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8a93a6"/></marker>
+    <marker id="r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#d24b45"/></marker>
+    <marker id="v" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#7a5cc7"/></marker>
+  </defs>
+
+  <text x="95" y="14" text-anchor="middle" font-size="13" font-weight="700" fill="#3b7ddd">ENTRÉES</text>
+  <text x="550" y="14" text-anchor="middle" font-size="13" font-weight="700" fill="#1d2330">SYSTÈME</text>
+  <text x="1005" y="14" text-anchor="middle" font-size="13" font-weight="700" fill="#2e9d57">SORTIES</text>
+
+  <!-- Données : définition d'un effet -->
+  <rect x="215" y="24" width="670" height="84" rx="8" fill="#fff7e6" stroke="#e0a63a"/>
+  <text x="230" y="44" font-size="13" font-weight="700">EffectDefinition</text>
+  <text x="352" y="44" font-size="11" fill="#5a6275">ScriptableObject : 1 asset = 1 effet (donnée, jamais codé en dur)</text>
+  <text x="230" y="63" font-size="11">durée : Instant · Timed (s) · Permanent   |   cumul : Stack (max N) · Refresh · Reject   |   polarité : Buff / Debuff</text>
+  <text x="230" y="82" font-size="11" font-weight="600">Composants ([SerializeReference]) : <tspan font-weight="400">Santé instantanée · Santé périodique · Modificateur de stats ·</tspan></text>
+  <text x="230" y="99" font-size="11">Blocage d'actions · Dissipation · Dégâts subis · Immunité   <tspan fill="#b07a12" font-weight="600">→ nouvelle brique = nouvelle classe, cœur inchangé</tspan></text>
+
+  <!-- Cadre StatusEntity -->
+  <rect x="215" y="124" width="670" height="280" rx="10" fill="#f6f8fb" stroke="#1d2330" stroke-width="1.4"/>
+  <text x="230" y="143" font-size="13" font-weight="700">StatusEntity</text>
+  <text x="560" y="143" font-size="11" fill="#5a6275">Joueur, Ennemi · C# pur, testable sans scène</text>
+  <line x1="420" y1="108" x2="420" y2="152" stroke="#e0a63a" stroke-width="1.6" marker-end="url(#a)"/>
+  <text x="428" y="120" font-size="9.5" fill="#b07a12">lu par le contrôleur</text>
+
+  <!-- Contrôleur -->
+  <rect x="230" y="154" width="300" height="122" rx="7" fill="#e9f1ff" stroke="#3b7ddd"/>
+  <text x="242" y="173" font-size="12.5" font-weight="700">StatusEffectController</text>
+  <text x="242" y="191" font-size="10.5">liste d'ActiveEffect : source, stacks, durée restante,</text>
+  <text x="242" y="205" font-size="10.5">état privé des composants (minuteur de tick)</text>
+  <text x="242" y="223" font-size="10.5"><tspan font-weight="700">Apply(effet, source)</tspan> → règle de cumul, immunité</text>
+  <text x="242" y="238" font-size="10.5"><tspan font-weight="700">Tick(dt)</tspan> → OnTick des composants, expiration</text>
+  <text x="242" y="253" font-size="10.5"><tspan font-weight="700">Capabilities&lt;T&gt;()</tspan> → composants ayant une capacité</text>
+  <text x="242" y="268" font-size="10.5" fill="#5a6275">événements typés : Applied, Removed, Changed</text>
+
+  <!-- Stats -->
+  <rect x="580" y="154" width="290" height="122" rx="7" fill="#eaf7ee" stroke="#2e9d57"/>
+  <text x="592" y="173" font-size="12.5" font-weight="700">StatSheet</text>
+  <text x="592" y="191" font-size="10.5">BaseStats (PV max, Vitesse, Dégâts, Défense)</text>
+  <text x="592" y="207" font-size="10.5">→ <tspan font-weight="700">StatCalculator</tspan> : additifs, puis</text>
+  <text x="592" y="221" font-size="10.5">   multiplicateurs, puis borne min</text>
+  <text x="592" y="239" font-size="10.5">→ stats finales en cache + <tspan font-weight="700">StatBreakdown</tspan></text>
+  <text x="592" y="253" font-size="10.5">   (« (4 + 2 Hâte) × 0.5 … = 3 »)</text>
+  <text x="592" y="268" font-size="10.5" fill="#5a6275">événements : StatChanged, Recomputed</text>
+
+  <!-- Flèches contrôleur / stats -->
+  <line x1="530" y1="195" x2="578" y2="195" stroke="#1d2330" stroke-width="1.4" marker-end="url(#a)"/>
+  <text x="555" y="189" font-size="9" text-anchor="middle">Recompute()</text>
+  <line x1="580" y1="232" x2="532" y2="232" stroke="#1d2330" stroke-width="1.4" marker-end="url(#a)"/>
+  <text x="555" y="247" font-size="9" text-anchor="middle">lit les</text>
+  <text x="555" y="257" font-size="9" text-anchor="middle">modificateurs</text>
+
+  <!-- Bande de liaison -->
+  <line x1="300" y1="276" x2="300" y2="318" stroke="#8a93a6" stroke-width="1.2" stroke-dasharray="4 3" marker-end="url(#g)"/>
+  <text x="306" y="300" font-size="9" fill="#5a6275">EffectLogWriter écrit</text>
+  <path d="M400 276 L400 288 L650 288 L650 318" fill="none" stroke="#8a93a6" stroke-width="1.2" stroke-dasharray="4 3" marker-end="url(#g)"/>
+  <text x="492" y="284" font-size="9" fill="#5a6275">composants → dégâts / soins</text>
+  <path d="M600 320 L600 304 L480 304 L480 278" fill="none" stroke="#d24b45" stroke-width="1.4" marker-end="url(#r)"/>
+  <text x="540" y="316" font-size="9" fill="#d24b45" text-anchor="middle">Died → RemoveAll</text>
+  <line x1="800" y1="276" x2="800" y2="318" stroke="#1d2330" stroke-width="1.4" marker-end="url(#a)"/>
+  <text x="794" y="302" font-size="9" text-anchor="end">borne les PV au max</text>
+
+  <!-- Journal -->
+  <rect x="230" y="320" width="300" height="74" rx="7" fill="#f1eefc" stroke="#7a5cc7"/>
+  <text x="242" y="338" font-size="12.5" font-weight="700">EffectEventLog</text>
+  <text x="242" y="355" font-size="10.5">journal partagé, horodaté en temps de simulation :</text>
+  <text x="242" y="370" font-size="10.5">appliqué, stack, rafraîchi, refusé, expiré, retiré,</text>
+  <text x="242" y="385" font-size="10.5">dégâts, soin, stat, bloqué, mort</text>
+
+  <!-- PV -->
+  <rect x="580" y="320" width="290" height="74" rx="7" fill="#fdecec" stroke="#d24b45"/>
+  <text x="592" y="338" font-size="12.5" font-weight="700">HealthPool</text>
+  <text x="592" y="355" font-size="10.5">PV courants ; max = stat finale PV max</text>
+  <text x="592" y="370" font-size="10.5">dégâts → IDamageModifier → × 100 / (100 + Défense)</text>
+  <text x="592" y="385" font-size="10.5">PV = 0 → événement Died</text>
+
+  <!-- Entrées -->
+  <g font-size="10.5">
+    <rect x="0" y="140" width="190" height="66" rx="7" fill="#fff" stroke="#3b7ddd"/>
+    <text x="10" y="158" font-weight="700" font-size="11.5">Appliquer un effet</text>
+    <text x="10" y="174">Apply(définition, source)</text>
+    <text x="10" y="189" fill="#5a6275">outil de test · touches 1→0</text>
+    <text x="10" y="202" fill="#5a6275">démo de cumul (bouton)</text>
+
+    <rect x="0" y="218" width="190" height="66" rx="7" fill="#fff" stroke="#3b7ddd"/>
+    <text x="10" y="236" font-weight="700" font-size="11.5">Passage du temps</text>
+    <text x="10" y="252">SimulationClock.Advance(dt)</text>
+    <text x="10" y="267" fill="#5a6275">pas fixes de 20 ms, toutes les entités</text>
+    <text x="10" y="280" fill="#5a6275">pause · ×0.25 à ×2 · pas à pas</text>
+
+    <rect x="0" y="296" width="190" height="56" rx="7" fill="#fff" stroke="#3b7ddd"/>
+    <text x="10" y="314" font-weight="700" font-size="11.5">Tentative d'action</text>
+    <text x="10" y="330">TryAttack · déplacement</text>
+    <text x="10" y="345" fill="#5a6275">CanPerform(action)</text>
+  </g>
+  <line x1="190" y1="173" x2="228" y2="190" stroke="#3b7ddd" stroke-width="1.6" marker-end="url(#a)"/>
+  <line x1="190" y1="251" x2="228" y2="240" stroke="#3b7ddd" stroke-width="1.6" marker-end="url(#a)"/>
+  <line x1="190" y1="324" x2="213" y2="324" stroke="#3b7ddd" stroke-width="1.6" marker-end="url(#a)"/>
+
+  <!-- Sorties -->
+  <g font-size="10.5">
+    <rect x="910" y="134" width="190" height="44" rx="7" fill="#fff" stroke="#2e9d57"/>
+    <text x="920" y="152" font-weight="700" font-size="11.5">Stats finales</text>
+    <text x="920" y="168" fill="#5a6275">+ calcul détaillé (StatBreakdown)</text>
+
+    <rect x="910" y="188" width="190" height="44" rx="7" fill="#fff" stroke="#2e9d57"/>
+    <text x="920" y="206" font-weight="700" font-size="11.5">Dégâts / soins</text>
+    <text x="920" y="222" fill="#5a6275">PV modifiés, mort</text>
+
+    <rect x="910" y="242" width="190" height="44" rx="7" fill="#fff" stroke="#2e9d57"/>
+    <text x="920" y="260" font-weight="700" font-size="11.5">Entité bloquée</text>
+    <text x="920" y="276" fill="#5a6275">« Bloqué : … ← Étourdissement »</text>
+
+    <rect x="910" y="296" width="190" height="44" rx="7" fill="#fff" stroke="#2e9d57"/>
+    <text x="920" y="314" font-weight="700" font-size="11.5">Effet expiré / retiré / refusé</text>
+    <text x="920" y="330" fill="#5a6275">modificateurs retirés proprement</text>
+
+    <rect x="910" y="350" width="190" height="54" rx="7" fill="#fff" stroke="#7a5cc7"/>
+    <text x="920" y="368" font-weight="700" font-size="11.5">Panneau de debug</text>
+    <text x="920" y="383" fill="#5a6275">effets, stacks, durées, stats</text>
+    <text x="920" y="397" fill="#5a6275">base vs finale, journal</text>
+  </g>
+  <line x1="870" y1="156" x2="908" y2="156" stroke="#2e9d57" stroke-width="1.6" marker-end="url(#a)"/>
+  <path d="M870 340 L890 340 L890 210 L908 210" fill="none" stroke="#2e9d57" stroke-width="1.6" marker-end="url(#a)"/>
+  <line x1="890" y1="264" x2="908" y2="264" stroke="#2e9d57" stroke-width="1.6" marker-end="url(#a)"/>
+  <line x1="890" y1="318" x2="908" y2="318" stroke="#2e9d57" stroke-width="1.6" marker-end="url(#a)"/>
+  <path d="M380 394 L380 400 L898 400 L898 377 L908 377" fill="none" stroke="#7a5cc7" stroke-width="1.4" marker-end="url(#v)"/>
+</svg>
+
+<div class="grid">
+  <div class="card">
+    <h2>Règles de cumul (une par effet, dans l'asset)</h2>
+    <table>
+      <tr><th>Règle</th><th>Effet déjà actif réappliqué</th><th>Exemples</th></tr>
+      <tr><td><b>Stack</b></td><td>+1 stack jusqu'au max et durée remise à zéro ; au max, seule la durée repart</td><td>Poison ×5, Ralentissement ×3, Rage ×3</td></tr>
+      <tr><td><b>Refresh</b></td><td>durée remise à zéro, pas de stack</td><td>Régénération, Hâte, Armure</td></tr>
+      <tr><td><b>Reject</b></td><td>refusé et journalisé, l'effet en cours est intact</td><td>Étourdissement (pas d'enchaînement), Bénédiction</td></tr>
+      <tr><td><b>Instant</b></td><td>pas de cumul : agit puis disparaît, jamais stocké</td><td>Soin, Frappe, Purification</td></tr>
+    </table>
+    <p class="muted" style="margin:1.4mm 0 0">Tout est refusé sur une entité morte ou immunisée. La mort retire tous les effets. Option par effet : une instance par source.</p>
+  </div>
+
+  <div class="card">
+    <h2>Ordre de calcul d'une stat (StatCalculator)</h2>
+    <div class="formula">finale = max(min, (base + Σ add.) × Π mult.)</div>
+    <ul>
+      <li><b>1. Additifs</b> : valeur × stacks (Hâte +2, Armure +50, Rage −10/stack)</li>
+      <li><b>2. Multiplicateurs</b> : facteur = 1 + % × stacks (Ralentissement −25 %/stack → ×0.5 à 2 stacks). Facteurs de sources différentes multipliés entre eux.</li>
+      <li><b>3. Borne</b> : Vitesse, Dégâts, Défense ≥ 0 ; PV max ≥ 1</li>
+    </ul>
+    <p style="margin:1.2mm 0 0">Ex. : Vitesse <code>(4 + 2 Hâte) × 0.5 Ralent. ×2 = 3</code> et non 4 × 0.5 + 2 = 4. Défense <code>10 − 20 Rage ×2 = −10 → 0</code>.</p>
+  </div>
+
+  <div class="card">
+    <h2>Durées, temps et cas limites</h2>
+    <ul>
+      <li>Horloge commune à pas fixes de 20 ms : même résultat de 16 ms à 10 s par image, même quand plusieurs effets interagissent (testé).</li>
+      <li>Périodique : 1er tick après un intervalle ; le minuteur n'est pas remis à zéro par un rafraîchissement ; dégâts × stacks.</li>
+      <li>Ajout, stack ou retrait d'un effet → <code>Recompute()</code> avant d'appeler les composants : jamais de stats périmées.</li>
+      <li>PV max qui baisse → PV courants bornés ; qui monte → pas de soin gratuit.</li>
+      <li>37 tests automatiques (Unity Test Framework) couvrent ces règles.</li>
+    </ul>
+  </div>
+</div>
+</body>
+</html>

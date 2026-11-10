@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a48feaeafc7e5b74185646c1369262df, type: 3}
+  m_Name: 06_Hate
+  m_EditorClassIdentifier: QueteI1.StatusEffects.Core::QueteI1.StatusEffects.EffectDefinition
+  displayName: "H\xE2te"
+  description: "+2 de vitesse pendant 6 s. Ce bonus est ajout\xE9 AVANT les pourcentages (comme le ralentissement)."
+  color: {r: 1, g: 0.6, b: 0.2, a: 1}
+  polarity: 0
+  durationType: 1
+  duration: 6
+  stackingRule: 1
+  maxStacks: 1
+  components:
+  - rid: 4185617620051689477
+  references:
+    version: 2
+    RefIds:
+    - rid: 4185617620051689477
+      type: {class: StatModifierComponent, ns: QueteI1.StatusEffects.Content, asm: QueteI1.StatusEffects.Content}
+      data:
+        modifiers:
+        - stat: 1
+          operation: 0
+          value: 2

@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a48feaeafc7e5b74185646c1369262df, type: 3}
+  m_Name: 09_Etourdissement
+  m_EditorClassIdentifier: QueteI1.StatusEffects.Core::QueteI1.StatusEffects.EffectDefinition
+  displayName: "\xC9tourdissement"
+  description: 'Pendant 2,5 s : impossible de bouger ou d''attaquer. On ne peut pas le relancer tant qu''il est actif.'
+  color: {r: 1, g: 0.9, b: 0.3, a: 1}
+  polarity: 1
+  durationType: 1
+  duration: 2.5
+  stackingRule: 2
+  maxStacks: 1
+  components:
+  - rid: 4185617620051689480
+  references:
+    version: 2
+    RefIds:
+    - rid: 4185617620051689480
+      type: {class: BlockActionsComponent, ns: QueteI1.StatusEffects.Content, asm: QueteI1.StatusEffects.Content}
+      data:
+        blockedActions: 3

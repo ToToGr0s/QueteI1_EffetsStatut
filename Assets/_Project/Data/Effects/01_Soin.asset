@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a48feaeafc7e5b74185646c1369262df, type: 3}
+  m_Name: 01_Soin
+  m_EditorClassIdentifier: QueteI1.StatusEffects.Core::QueteI1.StatusEffects.EffectDefinition
+  displayName: Soin
+  description: Rend 30 points de vie d'un coup.
+  color: {r: 0.35, g: 0.85, b: 0.4, a: 1}
+  polarity: 0
+  durationType: 0
+  duration: 1
+  stackingRule: 1
+  maxStacks: 1
+  components:
+  - rid: 4185617620051689472
+  references:
+    version: 2
+    RefIds:
+    - rid: 4185617620051689472
+      type: {class: InstantHealthComponent, ns: QueteI1.StatusEffects.Content, asm: QueteI1.StatusEffects.Content}
+      data:
+        kind: 1
+        amount: 30
+        ignoreDefense: 0

@@ -1,0 +1,20 @@
+{
+    "name": "QueteI1.StatusEffects.Editor",
+    "rootNamespace": "QueteI1.StatusEffects.EditorTools",
+    "references": [
+        "QueteI1.StatusEffects.Core",
+        "QueteI1.StatusEffects.Content",
+        "QueteI1.StatusEffects.Presentation"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
