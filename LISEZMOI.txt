@@ -1,0 +1,54 @@
+QUÊTE I1 - SYSTÈME D'EFFETS DE STATUT (UNITY)
+
+LANCER LA SCÈNE DE TEST
+  1. Ouvrir le dossier du projet avec Unity 6000.6.5f1 (Unity Hub > Add > project from disk).
+  2. Ouvrir la scène Assets/_Project/Scenes/TestScene.unity.
+  3. Appuyer sur Play.
+
+  Pour un exécutable Windows : menu « Quête I1 > Build Windows » dans l'éditeur.
+  Il est écrit dans Builds/Windows/QueteI1_EffetsStatut.exe.
+
+UTILISER L'OUTIL DE TEST
+  Colonne de gauche : choisir la cible, cliquer sur un effet pour l'appliquer,
+  faire frapper une entité, retirer tous les effets de la cible.
+  Fiche de chaque entité : PV, actions bloquées, stats de base et finales avec
+  le calcul, effets actifs (stacks, règle de cumul, durée restante, bouton ×).
+  Journal en bas : tout ce que fait le système, horodaté.
+  Barre du haut : pause, pas à pas, vitesse, démo de cumul, réinitialisation.
+
+TOUCHES
+  1 à 0             appliquer l'effet 1 à 10 à la cible (le 11e se lance au clic)
+  Tab               changer de cible (ou clic sur l'entité)
+  Flèches ou A / D  déplacer le joueur (vitesse = stat finale)
+  Espace / Entrée   le joueur attaque l'ennemi / l'ennemi attaque le joueur
+  P / N             pause / avancer de 0,1 s
+  R                 réinitialiser
+
+LES 11 EFFETS (Assets/_Project/Data/Effects)
+  Soin             instantané              +30 PV
+  Frappe           instantané              25 dégâts, réduits par la défense
+  Poison           6 s, cumul ×5           3 dégâts/s par stack, ignore la défense
+  Régénération     5 s, rafraîchi          +6 PV/s
+  Ralentissement   5 s, cumul ×3           vitesse −25 % par stack (multiplicatif)
+  Hâte             6 s, rafraîchi          vitesse +2 (additif)
+  Rage             8 s, cumul ×3           dégâts +25 % et défense −10 par stack
+  Armure           8 s, rafraîchi          défense +50
+  Étourdissement   2,5 s, refusé si actif  bloque déplacement et attaque
+  Bénédiction      permanent, refusé       PV max +25, dégâts +3
+  Purification     instantané              retire tous les debuffs
+
+ORDRE DE CALCUL D'UNE STAT
+  finale = max(minimum, (base + somme des additifs) × produit des multiplicateurs)
+
+AJOUTER UN EFFET SANS TOUCHER AU CŒUR
+  1. Clic droit > Create > Quête I1 > Effet de statut.
+  2. Régler la durée et la règle de cumul, puis « Ajouter un composant… ».
+  3. Menu « Quête I1 > Synchroniser la bibliothèque d'effets ».
+
+TESTS
+  37 tests EditMode : Window > General > Test Runner.
+
+DOCUMENTS (dossier Docs)
+  B2_Quete_1_Sujet.pdf   le sujet
+  Schema_Anatomie.pdf    le schéma d'anatomie du système (aussi en PNG et HTML)
+  Outil_de_test.jpg      capture de l'outil de test
